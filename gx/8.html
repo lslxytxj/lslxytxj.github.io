@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>太空激战</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(45deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  canvas {
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 5px;
+    box-shadow: 0 0 50px rgba(0,150,255,0.2);
+  }
+  .score {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    text-shadow: 0 0 10px rgba(0,255,255,0.5);
+    background: rgba(0,0,0,0.7);
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid #00ffff;
+  }
+  .controls {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    color: #7cfc00;
+    text-align: center;
+    background: rgba(0,0,0,0.7);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #7cfc00;
+    box-shadow: 0 0 15px rgba(124,252,0,0.3);
+  }
+  .game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 32px;
+    background: rgba(0,0,0,0.9);
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 30px rgba(255,0,0,0.4);
+    display: none;
+  }
+  .game-over button {
+    margin-top: 25px;
+    padding: 12px 25px;
+    font-size: 20px;
+    background: #ff4500;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    transition: all 0.3s;
+  }
+  .game-over button:hover {
+    background: #ff6347;
+    transform: scale(1.1);
+  }
+  .options-menu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.8);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #00ffff;
+  }
+  .options-menu label {
+    display: block;
+    margin: 8px 0;
+  }
+  .skills-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.8);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ff4500;
+  }
+  .skill {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    margin: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    cursor: pointer;
+  }
+  .skill:hover {
+    transform: scale(1.1);
+  }
+  .skill-cooldown {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    transition: height 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  .skill-key {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+  }
+  .shield-effect {
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    border: 3px solid #00ffff;
+    border-radius: 50%;
+    animation: shieldPulse 1.5s infinite;
+    filter: drop-shadow(0 0 10px #00ffff);
+    pointer-events: none;
+    display: none;
+  }
+  @keyframes shieldPulse {
+    0% { transform: scale(0.9); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.5; }
+  }
+</style>
+</head>
+<body>
+<div class="options-menu">
+  <label><input type="checkbox" id="explosionEffects" checked> 爆炸特效</label>
+  <label><input type="checkbox" id="aircraftEffects" checked> 机体特效</label>
+</div>
+<div class="skills-container">
+  <div class="skill" id="skill1" style="background: linear-gradient(135deg, #ff4500 0%, #ff8c00 100%)">
+    <div class="skill-key">Q</div>
+    <div class="skill-cooldown"></div>
+  </div>
+  <div class="skill" id="skill2" style="background: linear-gradient(135deg, #32cd32 0%, #7cfc00 100%)">
+    <div class="skill-key">W</div>
+    <div class="skill-cooldown"></div>
+  </div>
+  <div class="skill" id="skill3" style="background: linear-gradient(135deg, #00bfff 0%, #87cefa 100%)">
+    <div class="skill-key">E</div>
+    <div class="skill-cooldown"></div>
+  </div>
+</div>
+<div class="score">星际积分: 0</div>
+<canvas id="gameCanvas"></canvas>
+<div class="controls">
+  🚀 方向键移动 | 空格射击<br>
+  🔧 1/2/3切换机体 | Q:量子爆破 W:无人机群 E:相位护盾
+</div>
+<div class="game-over">
+  🚨 任务失败！<br>
+  最终积分: <span id="finalScore">0</span><br>
+  <button id="restartButton">重新部署</button>
+</div>
+<div class="shield-effect" id="shieldEffect"></div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 800;
+canvas.height = 600;
+let unlockedSkills = 0;  // 当前已解锁的技能数量
+let skillUnlockPoints = [0,20,100];  // 各技能解锁所需积分
+let score = 0;
+let isGameOver = false;
+let invincibleMode = false;
+let player = { x: canvas.width/2, y: canvas.height-100, width: 40, height: 40 };
+let bullets = [];
+let enemies = [];
+let lastEnemySpawn = 0;
+const ENEMY_SPAWN_RATE = 380;
+
+function createExplosion(x, y) {
+  if(document.getElementById('explosionEffects').checked) {
+    const particles = [];
+    for(let i = 0; i < 30; i++) {
+      particles.push({
+        x, y,
+        vx: (Math.random()-0.5)*8,
+        vy: (Math.random()-0.5)*8,
+        life: 1
+      });
+    }
+    
+    const animate = () => {
+      ctx.fillStyle = `rgba(255, ${Math.random()*155}, 0, 0.8)`;
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.02;
+        ctx.fillRect(p.x, p.y, 4*p.life, 4*p.life);
+      });
+      if(particles.some(p => p.life > 0)) requestAnimationFrame(animate);
+    };
+    animate();
+  }
+}
+
+class Bullet {
+  constructor(x, y, w, h, speed) {
+    this.x = x;
+    this.y = y;
+    this.width = w;
+    this.height = h;
+    this.speed = speed;
+  }
+
+  update() {
+    this.y -= this.speed;
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
+}
+
+function spawnEnemy() {
+  let enemyType = Math.random();  // 随机生成敌机类型
+  let enemySpeed = 2 + Math.random() * 3;  // 敌机的移动速度
+  let enemySize = enemyType < 0.5 ? 30 : 50;  // 50%的几率生成更大的敌机
+  
+  enemies.push({
+    x: Math.random() * (canvas.width - enemySize),
+    y: -enemySize,
+    width: enemySize,
+    height: enemySize,
+    speed: enemySpeed
+  });
+}
+
+
+function checkCollisions() {
+  enemies.forEach((enemy, eIndex) => {
+    bullets.forEach((bullet, bIndex) => {
+      if (bullet.x < enemy.x + enemy.width &&
+          bullet.x + bullet.width > enemy.x &&
+          bullet.y < enemy.y + enemy.height &&
+          bullet.y + bullet.height > enemy.y) {
+        createExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+        enemies.splice(eIndex, 1);
+        bullets.splice(bIndex, 1);
+        score++;
+      }
+    });
+
+    if (!invincibleMode &&
+        player.x < enemy.x + enemy.width &&
+        player.x + player.width > enemy.x &&
+        player.y < enemy.y + enemy.height &&
+        player.y + player.height > enemy.y) {
+      gameOver();
+    }
+  });
+}
+
+
+function gameOver() {
+  isGameOver = true;
+  document.querySelector('.game-over').style.display = 'block';
+  document.getElementById('finalScore').textContent = score;
+}
+
+document.getElementById('restartButton').addEventListener('click', () => {
+  isGameOver = false;
+  score = 0;
+  enemies = [];
+  bullets = [];
+  player.x = canvas.width/2;
+  player.y = canvas.height-100;
+  document.querySelector('.game-over').style.display = 'none';
+  document.getElementById('shieldEffect').style.display = 'none';
+  invincibleMode = false;
+  
+  // 重置技能冷却
+  Object.values(skills).forEach(skill => skill.remaining = 0);
+  document.querySelectorAll('.skill-cooldown').forEach(cooldown => {
+    cooldown.style.height = '0%';
+  });
+  
+  gameLoop();
+});
+
+const skills = {
+  q: {
+    cooldown: 15000,
+    remaining: 0,
+    effect: () => {
+      if (unlockedSkills < 1) return;  // 未解锁技能时不允许使用
+      enemies.forEach((enemy) => {
+        createExplosion(enemy.x + enemy.width/2, enemy.y + enemy.height/2);
+        score++;
+      });
+      enemies.length = 0;
+    }
+  },
+  w: {
+    cooldown: 10000,
+    remaining: 0,
+    effect: () => {
+      if (unlockedSkills < 2) return;  // 未解锁技能时不允许使用
+      const createWingman = (offset) => ({
+        x: player.x + offset,
+        y: player.y,
+        width: 25,
+        height: 25,
+        lastFire: 0,
+        update: function() {
+          this.y -= 4;
+          ctx.fillStyle = '#7CFC00';
+          ctx.fillRect(this.x, this.y, this.width, this.height);
+          
+          if(Date.now() - this.lastFire > 250) {
+            bullets.push(new Bullet(
+              this.x + this.width/2 - 2,
+              this.y,
+              4, 8, 8
+            ));
+            this.lastFire = Date.now();
+          }
+        }
+      });
+
+      const wingmen = [createWingman(-60), createWingman(60)];
+      const interval = setInterval(() => {
+        wingmen.forEach(w => w.update());
+        if(wingmen[0].y < -50) clearInterval(interval);
+      }, 1000/60);
+      setTimeout(() => clearInterval(interval), 5000);
+    }
+  },
+  e: {
+    cooldown: 8000,
+    remaining: 0,
+    effect: () => {
+      if (unlockedSkills < 3) return;  // 未解锁技能时不允许使用
+      const shield = document.getElementById('shieldEffect');
+      shield.style.display = 'block';
+      invincibleMode = true;
+      setTimeout(() => {
+        shield.style.display = 'none';
+        invincibleMode = false;
+      }, 3000);
+    }
+  }
+};
+
+
+function updateSkills() {
+  Object.entries(skills).forEach(([key, skill], index) => {
+    if(skill.remaining > 0) {
+      skill.remaining -= 1000/60;
+      document.querySelectorAll('.skill-cooldown')[index].style.height = 
+        `${(skill.remaining / skill.cooldown) * 100}%`;
+    }
+  });
+}
+
+let moveSpeed = 20;
+let isShiftPressed = false;
+
+window.addEventListener('keydown', (e) => {
+  if(isGameOver) return;
+  
+  const key = e.key.toLowerCase();
+
+  // 检测是否按下了Shift键
+  if (key === 'shift') {
+    isShiftPressed = true;
+    moveSpeed = 13;  // 按住Shift时减慢速度
+  }
+
+  // 玩家移动控制
+  if(key === 'arrowleft') {
+    player.x = Math.max(0, player.x - moveSpeed); // 防止玩家走出画布
+  }
+  if(key === 'arrowright') {
+    player.x = Math.min(canvas.width - player.width, player.x + moveSpeed);
+  }
+  if(key === 'arrowup') {
+    player.y = Math.max(0, player.y - moveSpeed);
+  }
+  if(key === 'arrowdown') {
+    player.y = Math.min(canvas.height - player.height, player.y + moveSpeed);
+  }
+
+  // 处理技能使用
+  if(skills[key] && skills[key].remaining <= 0) {
+    skills[key].effect();
+    skills[key].remaining = skills[key].cooldown;
+    document.querySelectorAll('.skill-cooldown')[['q', 'w', 'e'].indexOf(key)].style.height = '100%';
+  }
+
+  if(key === ' ') {
+    bullets.push(new Bullet(
+      player.x + player.width / 2 - 2,
+      player.y,
+      4, 8, 10
+    ));
+  }
+});
+window.addEventListener('keyup', (e) => {
+  if (e.key.toLowerCase() === 'shift') {
+    isShiftPressed = false;
+    moveSpeed = 5;  // 松开Shift时恢复正常速度
+  }
+});
+
+
+function updateSkillUI() {
+  const skillsDivs = document.querySelectorAll('.skill');
+  skillsDivs.forEach((skillDiv, index) => {
+    if (index < unlockedSkills) {
+      skillDiv.style.opacity = 1;  // 显示技能
+      skillDiv.style.pointerEvents = 'auto';  // 允许点击技能
+    } else {
+      skillDiv.style.opacity = 0.5;  // 隐藏未解锁技能
+      skillDiv.style.pointerEvents = 'none';  // 禁用技能点击
+    }
+  });
+}
+
+
+function gameLoop() {
+  if (isGameOver) return;
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // 解锁技能
+  skillUnlockPoints.forEach((points, index) => {
+    if (score >= points && unlockedSkills <= index) {
+      unlockedSkills = index + 1;  // 解锁当前技能
+      updateSkillUI();
+    }
+  });
+
+  // 玩家绘制
+  ctx.fillStyle = document.getElementById('aircraftEffects').checked ? '#00FFFF' : '#6495ED';
+  ctx.fillRect(player.x, player.y, player.width, player.height);
+
+  // 敌机逻辑
+  if(Date.now() - lastEnemySpawn > ENEMY_SPAWN_RATE) {
+    spawnEnemy();
+    lastEnemySpawn = Date.now();
+  }
+
+  enemies.forEach((enemy, index) => {
+    enemy.y += enemy.speed;
+    ctx.fillStyle = '#FF4500';
+    ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+    if(enemy.y > canvas.height) enemies.splice(index, 1);
+  });
+
+  // 子弹逻辑
+  bullets.forEach((bullet, index) => {
+    bullet.update();
+    if(bullet.y < 0) bullets.splice(index, 1);
+  });
+
+  checkCollisions();
+  updateSkills();
+  document.querySelector('.score').textContent = `星际积分: ${score}`;
+  
+  requestAnimationFrame(gameLoop);
+}
+
+
+gameLoop();
+</script>
+</body>
+</html>
