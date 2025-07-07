@@ -50,7 +50,7 @@
         <h2>请输入密码</h2>
         <input type="password" id="passwordInput" placeholder="输入密码">
         <button onclick="checkPassword()">提交</button>
-        <div id="secretContent">lslxytxj</div>
+        <div id="secretContent">https://fb.xz61.cn/api/v1/client/subscribe?token=40d50e2970aebd29c1708e56ac92519d</div>
     </div>
 
     <script>
