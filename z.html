@@ -1,151 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>洛伦茨系统3D可视化</title>
-    <style>
-        body { margin: 0; overflow: hidden; background-color: #333; }
-        canvas { width: 100%; height: 100%; display: block; }
-        #info {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0,0,0,0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .controls {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            color: white;
-            font-family: Arial, sans-serif;
-            background-color: rgba(0,0,0,0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Oscillating Reaction Phase Plot</title>
+  <style>
+    body { background-color: #1a1a1a; margin: 0; overflow: hidden; font-family: sans-serif; color: white; }
+    canvas { display: block; }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    label, input {
+      display: block;
+      margin-bottom: 8px;
+    }
+    label {
+      margin-bottom: 2px;
+    }
+  </style>
 </head>
 <body>
-    <div id="info">洛伦茨系统3D可视化<br>拖动鼠标旋转视角，滚轮缩放</div>
-    <div class="controls">
-        <div>
-            a: <input type="range" id="a" min="0" max="30" step="0.1" value="10"> <span id="aValue">10</span>
-        </div>
-        <div>
-            b: <input type="range" id="b" min="0" max="50" step="0.1" value="28"> <span id="bValue">28</span>
-        </div>
-        <div>
-            c: <input type="range" id="c" min="0" max="10" step="0.1" value="8/3"> <span id="cValue">8/3</span>
-        </div>
-        <button id="reset">重置轨迹</button>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
-    <script>
-        // 初始化场景、相机和渲染器
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+  <div id="controls">
+    <label for="bInput">B 浓度 (0~5):</label>
+    <input type="range" id="bInput" min="0" max="5" step="0.01" value="1">
+    <span id="bValue">1</span>
+  </div>
 
-        // 添加轨道控制器
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
+  <canvas id="canvas"></canvas>
 
-        // 设置相机位置
-        camera.position.set(0, 0, 50);
-        controls.update();
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-        // 添加坐标轴辅助
-        const axesHelper = new THREE.AxesHelper(20);
-        scene.add(axesHelper);
+    const width = canvas.width;
+    const height = canvas.height;
 
-        // 洛伦茨系统参数
-        let a = 10;
-        let b = 28;
-        let c = 8/3;
-        
-        // 初始条件
-        let x = 0.1;
-        let y = 0;
-        let z = 0;
-        
-        // 时间步长
-        const dt = 0.01;
-        
-        // 存储轨迹点
-        const points = [];
-        const geometry = new THREE.BufferGeometry();
-        const material = new THREE.LineBasicMaterial({ color: 0x00ffff });
-        const line = new THREE.Line(geometry, material);
-        scene.add(line);
-        
-        // 更新滑块显示
-        document.getElementById('a').addEventListener('input', function() {
-            a = parseFloat(this.value);
-            document.getElementById('aValue').textContent = a;
-        });
-        
-        document.getElementById('b').addEventListener('input', function() {
-            b = parseFloat(this.value);
-            document.getElementById('bValue').textContent = b;
-        });
-        
-        document.getElementById('c').addEventListener('input', function() {
-            c = parseFloat(this.value);
-            document.getElementById('cValue').textContent = c;
-        });
-        
-        document.getElementById('reset').addEventListener('click', function() {
-            points.length = 0;
-            x = 0.1;
-            y = 0;
-            z = 0;
-        });
+    // 系统状态变量
+    let A = 1; // 恒定
+    let B = parseFloat(document.getElementById('bInput').value);
+    let X = 0.1, Y = 0.1, D = 0, E = 0;
 
-        // 动画循环
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            // 更新洛伦茨系统
-            const dx = a * (y - x) * dt;
-            const dy = (x * (b - z) - y) * dt;
-            const dz = (x * y - c * z) * dt;
-            
-            x += dx;
-            y += dy;
-            z += dz;
-            
-            // 添加新点
-            points.push(new THREE.Vector3(x, y, z));
-            
-            // 限制点的数量以避免性能问题
-            if (points.length > 5000) {
-                points.shift();
-            }
-            
-            // 更新几何体
-            geometry.setFromPoints(points);
-            
-            // 更新控制器
-            controls.update();
-            
-            // 渲染场景
-            renderer.render(scene, camera);
-        }
-        
-        // 处理窗口大小变化
-        window.addEventListener('resize', function() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+    const dt = 0.01;
+    const fps = 30;
+    const trail = [];
+    const maxTrail = 1000;
 
-        animate();
-    </script>
+    // 映射画布坐标函数（动态缩放）
+    function getBounds(trail) {
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (let [x, y] of trail) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+      return { minX, maxX, minY, maxY };
+    }
+
+    function toCanvasCoords(x, y, bounds) {
+      const margin = 50;
+      const scaleX = (width - 2 * margin) / (bounds.maxX - bounds.minX + 0.1);
+      const scaleY = (height - 2 * margin) / (bounds.maxY - bounds.minY + 0.1);
+      const scale = Math.min(scaleX, scaleY);
+      const cx = margin + (x - bounds.minX) * scale;
+      const cy = height - margin - (y - bounds.minY) * scale;
+      return [cx, cy];
+    }
+
+    function step() {
+      // 反应速率常数（可以微调）
+      const k1 = 1;
+      const k2 = 1;
+      const k3 = 1;
+      const k4 = 0.1;
+
+      // 化学反应微分方程
+      const dX = k1 * A - k2 * B * X + k3 * X * X * Y - k4 * X;
+      const dY = k2 * B * X - k3 * X * X * Y;
+
+      X += dX * dt;
+      Y += dY * dt;
+
+      if (X < 0) X = 0;
+      if (Y < 0) Y = 0;
+
+      trail.push([X, Y]);
+      if (trail.length > maxTrail) trail.shift();
+    }
+
+    function draw() {
+      step();
+
+      ctx.clearRect(0, 0, width, height);
+
+      const bounds = getBounds(trail);
+
+      // 坐标轴
+      ctx.strokeStyle = "#444";
+      ctx.beginPath();
+      ctx.moveTo(0, height - 50);
+      ctx.lineTo(width, height - 50);
+      ctx.moveTo(50, 0);
+      ctx.lineTo(50, height);
+      ctx.stroke();
+
+      // 绘制轨迹
+      ctx.strokeStyle = "#00ccff";
+      ctx.beginPath();
+      for (let i = 0; i < trail.length; i++) {
+        const [cx, cy] = toCanvasCoords(trail[i][0], trail[i][1], bounds);
+        if (i === 0) ctx.moveTo(cx, cy);
+        else ctx.lineTo(cx, cy);
+      }
+      ctx.stroke();
+
+      // 绘制当前点
+      const [cx, cy] = toCanvasCoords(X, Y, bounds);
+      ctx.fillStyle = "#ff5555";
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    setInterval(draw, 1000 / fps);
+
+    // 控制B浓度变化
+    const bInput = document.getElementById('bInput');
+    const bValue = document.getElementById('bValue');
+    bInput.addEventListener('input', () => {
+      B = parseFloat(bInput.value);
+      bValue.textContent = B.toFixed(2);
+    });
+
+    // 窗口调整
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
 </body>
 </html>
