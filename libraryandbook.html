@@ -156,21 +156,16 @@
             cursor: not-allowed;
         }
         
+        .puzzle-image {
+            max-width: 100%;
+            margin: 15px 0;
+            border: 2px solid #8b4513;
+            border-radius: 5px;
+        }
+        
         .locked-content {
             display: none;
             text-align: center;
-        }
-        
-        .unlocked-content {
-            display: none;
-            text-align: center;
-        }
-        
-        .iran-image {
-            max-width: 100%;
-            margin-top: 15px;
-            border: 2px solid #8b4513;
-            border-radius: 5px;
         }
     </style>
 </head>
@@ -203,19 +198,17 @@
                 
                 <div class="page" id="page3">
                     <h2>第三页</h2>
+                    <p>解开这个谜题，找出隐藏的答案：</p>
+                    <img src="https://image.wsq127.top/file/qr15scif.png" alt="谜题" class="puzzle-image">
                     
-                    <div class="locked-content" id="lockedContent">
-                        <p>此内容已被加密，请输入密码查看：</p>
-                        <div class="input-container">
-                            <input type="text" id="iranInput" placeholder="输入密码...">
-                            <button onclick="checkIranPassword()">确认</button>
-                        </div>
+                    <div class="input-container">
+                        <input type="text" id="iranInput" placeholder="输入答案...">
+                        <button onclick="checkIranPassword()">确认</button>
                     </div>
                     
-                    <div class="unlocked-content" id="unlockedContent">
+                    <div class="locked-content" id="unlockedContent">
                         <p>恭喜你解开了谜题！</p>
                         <div class="fruit-grid" id="fruitGrid"></div>
-                        <img src="https://image.wsq127.top/file/qr15scif.png" alt="谜题答案" class="iran-image">
                     </div>
                     
                     <div class="page-nav">
@@ -244,7 +237,6 @@
         const passwordModal = document.getElementById('passwordModal');
         const passwordInput = document.getElementById('passwordInput');
         const fruitGrid = document.getElementById('fruitGrid');
-        const lockedContent = document.getElementById('lockedContent');
         const unlockedContent = document.getElementById('unlockedContent');
         const iranInput = document.getElementById('iranInput');
         
@@ -291,15 +283,6 @@
                 document.querySelector('.page-btn:first-child').disabled = true;
             } else if (pageNum === 3) {
                 document.querySelector('.page-btn:last-child').disabled = true;
-                
-                // 显示或隐藏第三页的内容
-                if (iranUnlocked) {
-                    lockedContent.style.display = 'none';
-                    unlockedContent.style.display = 'block';
-                } else {
-                    lockedContent.style.display = 'block';
-                    unlockedContent.style.display = 'none';
-                }
             }
         }
         
@@ -321,10 +304,10 @@
         function checkIranPassword() {
             if (iranInput.value.toUpperCase() === 'IRAN') {
                 iranUnlocked = true;
-                lockedContent.style.display = 'none';
                 unlockedContent.style.display = 'block';
+                alert('答案正确！谜题已解开。');
             } else {
-                alert('密码错误，请重试！');
+                alert('答案错误，请重试！');
                 iranInput.value = '';
             }
         }
