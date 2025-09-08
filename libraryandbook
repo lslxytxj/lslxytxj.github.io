@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神秘古书探索</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #e0d6b0;
+        }
+        
+        .library {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), 
+                        url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=600&h=400&fit=crop') no-repeat center;
+            background-size: cover;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .book {
+            width: 180px;
+            height: 240px;
+            background: linear-gradient(15deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+            border-radius: 5px 15px 15px 5px;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.5),
+                        inset 5px 0 10px rgba(255,255,255,0.1);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .book:hover {
+            transform: scale(1.05);
+        }
+        
+        .book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        .book-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px #000;
+        }
+        
+        .book-pages {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #f5f0e1;
+            color: #333;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .sequence {
+            font-size: 24px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .fruit-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .fruit-cell {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            background: #f9f3e6;
+            border-radius: 3px;
+        }
+        
+        .input-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        input {
+            padding: 5px 10px;
+            border: 1px solid #8b4513;
+            border-radius: 3px;
+            background: #f5f0e1;
+        }
+        
+        button {
+            margin-top: 10px;
+            padding: 5px 15px;
+            background: #8b4513;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .page-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .page-btn {
+            background: #8b4513;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .page-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .locked-content {
+            display: none;
+            text-align: center;
+        }
+        
+        .unlocked-content {
+            display: none;
+            text-align: center;
+        }
+        
+        .iran-image {
+            max-width: 100%;
+            margin-top: 15px;
+            border: 2px solid #8b4513;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="library">
+        <div class="book" id="ancientBook">
+            <div class="book-cover" id="bookCover">
+                <div class="book-title">神秘古书</div>
+                <div>点击探索</div>
+            </div>
+            
+            <div class="book-pages" id="bookPages">
+                <div class="page" id="page1">
+                    <h2>第一页</h2>
+                    <div class="sequence">1 2 ? 8 16 32……</div>
+                    <div class="page-nav">
+                        <button class="page-btn" onclick="prevPage()" disabled>上一页</button>
+                        <button class="page-btn" onclick="nextPage()">下一页</button>
+                    </div>
+                </div>
+                
+                <div class="page" id="page2">
+                    <h2>第二页</h2>
+                    <div class="sequence">0 1 3 ? 9 11 15</div>
+                    <div class="page-nav">
+                        <button class="page-btn" onclick="prevPage()">上一页</button>
+                        <button class="page-btn" onclick="nextPage()">下一页</button>
+                    </div>
+                </div>
+                
+                <div class="page" id="page3">
+                    <h2>第三页</h2>
+                    
+                    <div class="locked-content" id="lockedContent">
+                        <p>此内容已被加密，请输入密码查看：</p>
+                        <div class="input-container">
+                            <input type="text" id="iranInput" placeholder="输入密码...">
+                            <button onclick="checkIranPassword()">确认</button>
+                        </div>
+                    </div>
+                    
+                    <div class="unlocked-content" id="unlockedContent">
+                        <p>恭喜你解开了谜题！</p>
+                        <div class="fruit-grid" id="fruitGrid"></div>
+                        <img src="https://image.wsq127.top/file/qr15scif.png" alt="谜题答案" class="iran-image">
+                    </div>
+                    
+                    <div class="page-nav">
+                        <button class="page-btn" onclick="prevPage()">上一页</button>
+                        <button class="page-btn" onclick="nextPage()" disabled>下一页</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="passwordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center;">
+        <div style="background: #f5f0e1; padding: 30px; border-radius: 10px; text-align: center; max-width: 300px;">
+            <h2 style="color: #8b4513; margin-top: 0;">请输入文字</h2>
+            <input type="text" id="passwordInput" placeholder="输入文字...">
+            <div style="margin-top: 20px;">
+                <button onclick="checkPassword()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const book = document.getElementById('ancientBook');
+        const bookCover = document.getElementById('bookCover');
+        const bookPages = document.getElementById('bookPages');
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const fruitGrid = document.getElementById('fruitGrid');
+        const lockedContent = document.getElementById('lockedContent');
+        const unlockedContent = document.getElementById('unlockedContent');
+        const iranInput = document.getElementById('iranInput');
+        
+        let currentPage = 1;
+        let iranUnlocked = false;
+        
+        // 初始化水果网格
+        function initFruitGrid() {
+            const fruits = ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍒', '🍑'];
+            
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'fruit-cell';
+                    
+                    // 第4行第5列放柠檬
+                    if (i === 3 && j === 4) {
+                        cell.textContent = '🍋';
+                    } else {
+                        const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
+                        cell.textContent = randomFruit;
+                    }
+                    
+                    fruitGrid.appendChild(cell);
+                }
+            }
+        }
+        
+        // 显示指定页面
+        function showPage(pageNum) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.getElementById(`page${pageNum}`).classList.add('active');
+            currentPage = pageNum;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.page-btn').forEach(btn => {
+                btn.disabled = false;
+            });
+            
+            if (pageNum === 1) {
+                document.querySelector('.page-btn:first-child').disabled = true;
+            } else if (pageNum === 3) {
+                document.querySelector('.page-btn:last-child').disabled = true;
+                
+                // 显示或隐藏第三页的内容
+                if (iranUnlocked) {
+                    lockedContent.style.display = 'none';
+                    unlockedContent.style.display = 'block';
+                } else {
+                    lockedContent.style.display = 'block';
+                    unlockedContent.style.display = 'none';
+                }
+            }
+        }
+        
+        // 下一页
+        function nextPage() {
+            if (currentPage < 3) {
+                showPage(currentPage + 1);
+            }
+        }
+        
+        // 上一页
+        function prevPage() {
+            if (currentPage > 1) {
+                showPage(currentPage - 1);
+            }
+        }
+        
+        // 检查IRAN密码
+        function checkIranPassword() {
+            if (iranInput.value.toUpperCase() === 'IRAN') {
+                iranUnlocked = true;
+                lockedContent.style.display = 'none';
+                unlockedContent.style.display = 'block';
+            } else {
+                alert('密码错误，请重试！');
+                iranInput.value = '';
+            }
+        }
+        
+        // 检查密码
+        function checkPassword() {
+            if (passwordInput.value.toLowerCase() === '文字') {
+                bookCover.style.display = 'none';
+                bookPages.style.display = 'block';
+                passwordModal.style.display = 'none';
+                showPage(1);
+            } else {
+                alert('输入错误，请重试！');
+                passwordInput.value = '';
+            }
+        }
+        
+        // 点击古书事件
+        book.addEventListener('click', function() {
+            if (bookCover.style.display !== 'none') {
+                passwordModal.style.display = 'flex';
+                passwordInput.focus();
+            }
+        });
+        
+        // 初始化
+        initFruitGrid();
+    </script>
+</body>
+</html>
