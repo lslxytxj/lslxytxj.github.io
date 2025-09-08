@@ -18,25 +18,25 @@
         
         .library {
             position: relative;
-            width: 600px;
-            height: 400px;
+            width: 800px;
+            height: 600px;
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), 
-                        url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=600&h=400&fit=crop') no-repeat center;
+                        url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&h=600&fit=crop') no-repeat center;
             background-size: cover;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
             display: flex;
             justify-content: center;
             align-items: center;
         }
         
         .book {
-            width: 180px;
-            height: 240px;
+            width: 280px;
+            height: 380px;
             background: linear-gradient(15deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
-            border-radius: 5px 15px 15px 5px;
-            box-shadow: 5px 5px 20px rgba(0,0,0,0.5),
-                        inset 5px 0 10px rgba(255,255,255,0.1);
+            border-radius: 8px 20px 20px 8px;
+            box-shadow: 8px 8px 30px rgba(0,0,0,0.6),
+                        inset 8px 0 15px rgba(255,255,255,0.1);
             position: relative;
             cursor: pointer;
             transition: transform 0.3s;
@@ -58,16 +58,20 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            padding: 20px;
+            padding: 30px;
             box-sizing: border-box;
             text-align: center;
         }
         
         .book-title {
-            font-size: 18px;
+            font-size: 26px;
             font-weight: bold;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 2px #000;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px #000;
+        }
+        
+        .book-subtitle {
+            font-size: 18px;
         }
         
         .book-pages {
@@ -77,7 +81,7 @@
             height: 100%;
             background: #f5f0e1;
             color: #333;
-            padding: 20px;
+            padding: 25px;
             box-sizing: border-box;
             overflow-y: auto;
         }
@@ -90,65 +94,89 @@
             display: block;
         }
         
-        .sequence {
+        .page h2 {
             font-size: 24px;
-            margin: 20px 0;
+            margin-top: 0;
+            color: #8b4513;
+            border-bottom: 2px solid #8b4513;
+            padding-bottom: 10px;
+        }
+        
+        .sequence {
+            font-size: 28px;
+            margin: 25px 0;
             text-align: center;
+            font-weight: bold;
         }
         
         .fruit-grid {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
-            gap: 5px;
-            margin-top: 10px;
+            gap: 6px;
+            margin: 15px 0;
         }
         
         .fruit-cell {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 20px;
+            font-size: 24px;
             background: #f9f3e6;
-            border-radius: 3px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .input-container {
-            margin-top: 20px;
+            margin: 25px 0;
             text-align: center;
         }
         
         input {
-            padding: 5px 10px;
-            border: 1px solid #8b4513;
-            border-radius: 3px;
+            padding: 8px 15px;
+            font-size: 16px;
+            border: 2px solid #8b4513;
+            border-radius: 5px;
             background: #f5f0e1;
+            width: 200px;
         }
         
         button {
-            margin-top: 10px;
-            padding: 5px 15px;
+            margin-top: 15px;
+            padding: 8px 20px;
+            font-size: 16px;
             background: #8b4513;
             color: white;
             border: none;
-            border-radius: 3px;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #a0522d;
         }
         
         .page-nav {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 25px;
         }
         
         .page-btn {
             background: #8b4513;
             color: white;
             border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
+            padding: 8px 15px;
+            font-size: 16px;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .page-btn:hover:not(:disabled) {
+            background: #a0522d;
         }
         
         .page-btn:disabled {
@@ -158,14 +186,27 @@
         
         .puzzle-image {
             max-width: 100%;
-            margin: 15px 0;
-            border: 2px solid #8b4513;
-            border-radius: 5px;
+            margin: 20px 0;
+            border: 3px solid #8b4513;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
         .locked-content {
             display: none;
             text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8dcc9;
+            border-radius: 8px;
+            border: 2px solid #8b4513;
+        }
+        
+        .locked-content p {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            color: #8b4513;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -174,7 +215,7 @@
         <div class="book" id="ancientBook">
             <div class="book-cover" id="bookCover">
                 <div class="book-title">神秘古书</div>
-                <div>点击探索</div>
+                <div class="book-subtitle">点击探索</div>
             </div>
             
             <div class="book-pages" id="bookPages">
@@ -198,7 +239,7 @@
                 
                 <div class="page" id="page3">
                     <h2>第三页</h2>
-                    <p>解开这个谜题以解锁第 3 页</p>
+                    <p>解开这个谜题，显示第 3 页：</p>
                     <img src="https://image.wsq127.top/file/qr15scif.png" alt="谜题" class="puzzle-image">
                     
                     <div class="input-container">
@@ -220,12 +261,12 @@
         </div>
     </div>
 
-    <div id="passwordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center;">
-        <div style="background: #f5f0e1; padding: 30px; border-radius: 10px; text-align: center; max-width: 300px;">
-            <h2 style="color: #8b4513; margin-top: 0;">请输入文字</h2>
-            <input type="text" id="passwordInput" placeholder="输入文字...">
-            <div style="margin-top: 20px;">
-                <button onclick="checkPassword()">确认</button>
+    <div id="passwordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center;">
+        <div style="background: #f5f0e1; padding: 40px; border-radius: 15px; text-align: center; max-width: 400px; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+            <h2 style="color: #8b4513; margin-top: 0; font-size: 24px;">请输入文字</h2>
+            <input type="text" id="passwordInput" placeholder="输入文字..." style="padding: 10px; font-size: 18px; width: 250px; margin: 15px 0;">
+            <div style="margin-top: 25px;">
+                <button onclick="checkPassword()" style="padding: 10px 25px; font-size: 18px;">确认</button>
             </div>
         </div>
     </div>
