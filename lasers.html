@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>level 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            color: white;
+        }
+        
+        h1 {
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+        }
+        
+        .computer {
+            width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .screen {
+            background: #2c3e50;
+            border: 20px solid #1a2530;
+            border-radius: 12px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+        
+        .screen-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .ppt-slide {
+            width: 90%;
+            height: 90%;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .ppt-slide img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        
+        .base {
+            width: 180px;
+            height: 30px;
+            background: #1a2530;
+            margin: 0 auto;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        .stand {
+            width: 10px;
+            height: 80px;
+            background: #1a2530;
+            margin: 0 auto;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+        }
+        
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .page-indicator {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .fade-enter-active {
+            animation: fadeIn 0.5s;
+        }
+        
+        .fade-leave-active {
+            animation: fadeOut 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(1.05); }
+        }
+        
+        .keyboard-shortcuts {
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1000px) {
+            .computer {
+                width: 95%;
+            }
+            
+            .screen {
+                height: 400px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .screen {
+                height: 300px;
+                border-width: 15px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>只有第 4 页和第 7 页是相同的，若有其他相同请在那个界面停留几秒</h1>
+        
+        <div class="computer">
+            <div class="screen">
+                <div class="screen-content">
+                    <div class="ppt-slide">
+                        <img id="current-slide" src="https://image.wsq127.top/file/596br1yh.png" alt="PPT幻灯片">
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn" id="prev-btn">上一页</button>
+                    <div class="page-indicator">第 <span id="current-page">1</span> 页 / 共 7 页</div>
+                    <button class="btn" id="next-btn">下一页</button>
+                </div>
+            </div>
+            <div class="stand"></div>
+            <div class="base"></div>
+        </div>
+        
+        <div class="keyboard-shortcuts">
+            使用键盘左右箭头键也可以翻页
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = [
+                "https://image.wsq127.top/file/596br1yh.png",
+                "https://image.wsq127.top/file/zo2y282u.png",
+                "https://image.wsq127.top/file/mf8b9p64.png",
+                "https://image.wsq127.top/file/6r12pd82.png",
+                "https://image.wsq127.top/file/tab7nvyf.png",
+                "https://image.wsq127.top/file/f1b721ve.png",
+                "https://image.wsq127.top/file/6r12pd82.png"
+            ];
+            
+            let currentPage = 0;
+            const slideImage = document.getElementById('current-slide');
+            const currentPageElement = document.getElementById('current-page');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            // 更新按钮状态
+            function updateButtons() {
+                prevBtn.disabled = currentPage === 0;
+                nextBtn.disabled = currentPage === slides.length - 1;
+            }
+            
+            // 显示当前幻灯片
+            function showSlide() {
+                slideImage.src = slides[currentPage];
+                currentPageElement.textContent = currentPage + 1;
+                updateButtons();
+                
+                // 添加动画效果
+                slideImage.parentElement.classList.add('fade-enter-active');
+                setTimeout(() => {
+                    slideImage.parentElement.classList.remove('fade-enter-active');
+                }, 500);
+            }
+            
+            // 上一页
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 0) {
+                    currentPage--;
+                    showSlide();
+                }
+            });
+            
+            // 下一页
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < slides.length - 1) {
+                    currentPage++;
+                    showSlide();
+                }
+            });
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' && currentPage > 0) {
+                    currentPage--;
+                    showSlide();
+                } else if (e.key === 'ArrowRight' && currentPage < slides.length - 1) {
+                    currentPage++;
+                    showSlide();
+                }
+            });
+            
+            // 初始化
+            updateButtons();
+        });
+    </script>
+</body>
+</html>
