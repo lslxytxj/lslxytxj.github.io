@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>文本阅读器 · 一键复制</title>
+    <style>
+        /* 极简风格，无多余界面元素 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f7fa;
+            font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            margin: 0;
+            transition: background 0.2s ease;
+        }
+
+        /* 整个卡片就是唯一的可见区域，但保持干净 */
+        .content-card {
+            max-width: 820px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            padding: 2rem 2.2rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* 文本展示区域：干净、可读 */
+        .text-display {
+            background: #fafbfc;
+            border-radius: 1.5rem;
+            padding: 1.8rem 2rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #1e293b;
+            word-break: break-word;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #edf2f7;
+            transition: background 0.2s;
+            letter-spacing: 0.01em;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+        }
+
+        /* 自定义滚动条，保持极简 */
+        .text-display::-webkit-scrollbar {
+            width: 8px;
+        }
+        .text-display::-webkit-scrollbar-track {
+            background: #edf2f7;
+            border-radius: 10px;
+            margin-block: 0.5rem;
+        }
+        .text-display::-webkit-scrollbar-thumb {
+            background: #b9c7da;
+            border-radius: 10px;
+            border: 2px solid #fafbfc;
+        }
+        .text-display::-webkit-scrollbar-thumb:hover {
+            background: #8b9cb0;
+        }
+
+        /* 状态提示与按钮行：极简布局 */
+        .action-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        /* 微小状态文字，不属于界面装饰，仅反馈 */
+        .copy-feedback {
+            font-size: 0.9rem;
+            color: #4b5563;
+            background: #f3f4f6;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            transform: translateY(3px);
+            pointer-events: none;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            font-weight: 450;
+            border: 1px solid #e9eef3;
+        }
+
+        .copy-feedback.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 复制按钮：唯一操作元素，干净醒目 */
+        .copy-btn {
+            background: #111827;
+            border: none;
+            color: white;
+            font-weight: 540;
+            font-size: 1rem;
+            padding: 0.75rem 2rem;
+            border-radius: 3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: #0f172a;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.2);
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            letter-spacing: 0.4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            line-height: 1.2;
+        }
+
+        .copy-btn:hover {
+            background: #1e293b;
+            box-shadow: 0 12px 22px rgba(15, 23, 42, 0.28);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.96);
+            background: #0b1120;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .copy-btn:focus-visible {
+            outline: 2px solid #a5b4fc;
+            outline-offset: 3px;
+        }
+
+        /* 加载或错误时的文字样式（同样不添加复杂UI） */
+        .status-message {
+            color: #5f6b7a;
+            font-style: italic;
+            padding: 1rem 0.5rem;
+            text-align: center;
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            font-size: 1rem;
+        }
+
+        /* 完全响应式，小屏幕调整 */
+        @media (max-width: 550px) {
+            body {
+                padding: 1rem;
+            }
+            .content-card {
+                padding: 1.5rem;
+            }
+            .text-display {
+                padding: 1.2rem;
+                font-size: 1rem;
+                max-height: 400px;
+            }
+            .action-row {
+                justify-content: center;
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            .copy-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 没有任何多余的导航、标题或装饰，只有一个内容容器 -->
+    <div class="content-card">
+        <!-- 文本预览区域：将动态插入vv.txt内容 -->
+        <div id="textContainer" class="text-display" aria-live="polite" aria-label="文本内容区域">
+            <!-- 初始占位文字，加载后会被替换 -->
+            <div class="status-message">⏳ 正在读取 vv.txt ...</div>
+        </div>
+
+        <!-- 极简操作行：仅复制按钮与微小反馈 -->
+        <div class="action-row">
+            <span id="copyFeedback" class="copy-feedback" aria-hidden="true">✔ 已复制</span>
+            <button id="copyButton" class="copy-btn" disabled>
+                <span style="font-size:1.1rem; margin-right:2px;">📋</span> 一键复制
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // DOM 元素
+            const textContainer = document.getElementById('textContainer');
+            const copyButton = document.getElementById('copyButton');
+            const copyFeedback = document.getElementById('copyFeedback');
+
+            // 存储从 vv.txt 读取的原始文本
+            let fullText = '';
+
+            // 反馈消息自动隐藏定时器
+            let feedbackTimer = null;
+
+            /**
+             * 显示短暂反馈 (例如“已复制”)
+             * @param {string} message 显示的文字
+             * @param {number} duration 显示毫秒数
+             */
+            function showFeedback(message, duration = 1800) {
+                if (feedbackTimer) {
+                    clearTimeout(feedbackTimer);
+                }
+                copyFeedback.textContent = message;
+                copyFeedback.classList.add('show');
+                feedbackTimer = setTimeout(() => {
+                    copyFeedback.classList.remove('show');
+                    feedbackTimer = null;
+                }, duration);
+            }
+
+            /**
+             * 将文本设置为界面内容，并启用复制按钮
+             * @param {string} text 文本内容
+             */
+            function renderText(text) {
+                // 清理容器，保留纯文本显示（保留换行和空格）
+                textContainer.textContent = text;
+                
+                // 如果文本为空或仅空白字符，显示提示但保留复制功能
+                if (!text || text.trim() === '') {
+                    // 仍然展示内容（可能是空字符串），但保留可复制状态
+                    // 为了让用户知道内容为空，可以在文本域显示占位提示
+                    if (text.trim() === '') {
+                        textContainer.textContent = text; // 显示实际内容（空或空格）
+                        // 额外视觉提示：如果完全空白，插入一个温和的提示（但依旧是文本本身）
+                        if (text === '') {
+                            textContainer.innerHTML = '<span style="color:#8295b0; font-style:italic;">（vv.txt 内容为空）</span>';
+                            // 但复制时仍复制空字符串，所以需要记录实际文本
+                            // 这里为了保持纯净，我们把实际文本记录为 ''，但显示提示。
+                            // 注意：这样复制按钮复制的是空字符串。符合预期。
+                        }
+                    }
+                }
+                
+                // 存储当前真实文本（用于复制）
+                fullText = text;
+                
+                // 启用复制按钮 (移除disabled属性)
+                copyButton.disabled = false;
+            }
+
+            /**
+             * 显示错误状态（无法加载文件等）
+             * @param {string} errorMessage 错误描述
+             */
+            function showErrorState(errorMessage) {
+                textContainer.innerHTML = `<div class="status-message" style="color:#b91c1c; background:#fff5f5;">⚠️ ${escapeHtml(errorMessage)}</div>`;
+                // 仍然禁用复制按钮，因为没有有效文本
+                copyButton.disabled = true;
+                fullText = '';
+            }
+
+            /**
+             * 简单的转义函数，防止XSS (虽然我们用textContent，但innerHTML时需注意)
+             */
+            function escapeHtml(unsafe) {
+                return unsafe.replace(/[&<>"']/g, function(m) {
+                    switch (m) {
+                        case '&': return '&amp;';
+                        case '<': return '&lt;';
+                        case '>': return '&gt;';
+                        case '"': return '&quot;';
+                        case "'": return '&#039;';
+                        default: return m;
+                    }
+                });
+            }
+
+            /**
+             * 使用 Fetch API 读取 vv.txt 文件
+             */
+            async function loadTextFile() {
+                try {
+                    // 显示加载状态（保持简洁）
+                    textContainer.innerHTML = '<div class="status-message">⏳ 正在读取 vv.txt ...</div>';
+                    
+                    // 请求同一目录下的 vv.txt 文件
+                    const response = await fetch('vv.txt', {
+                        method: 'GET',
+                        // 确保不使用缓存，尤其在开发时可能修改文件
+                        cache: 'no-store',
+                    });
+
+                    // 检查响应是否成功
+                    if (!response.ok) {
+                        throw new Error(`无法加载文件 (状态码: ${response.status})`);
+                    }
+
+                    // 读取文本内容
+                    const text = await response.text();
+                    
+                    // 渲染文本到界面
+                    renderText(text);
+                    
+                } catch (error) {
+                    console.error('读取vv.txt失败:', error);
+                    
+                    // 根据错误类型给出友好提示（但不添加多余界面）
+                    let message = '无法读取 vv.txt';
+                    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                        message = '找不到 vv.txt 或网络错误。请确保文件存在于同一目录。';
+                    } else if (error.message.includes('状态码')) {
+                        message = error.message;
+                    } else {
+                        message = `读取失败: ${error.message}`;
+                    }
+                    showErrorState(message);
+                }
+            }
+
+            /**
+             * 复制文本到剪贴板
+             */
+            async function copyTextToClipboard() {
+                // 如果没有文本或按钮禁用状态，不执行
+                if (copyButton.disabled || fullText === null || fullText === undefined) {
+                    // 但仍然可以尝试复制当前容器显示的文本？为了安全，依据fullText。
+                    return;
+                }
+
+                try {
+                    // 使用现代 Clipboard API
+                    await navigator.clipboard.writeText(fullText);
+                    
+                    // 显示成功反馈
+                    showFeedback('✔ 已复制到剪贴板', 2000);
+                    
+                    // 可选：临时改变按钮样式表示成功（极简处理）
+                    copyButton.style.transition = 'background 0.2s';
+                    const originalBg = copyButton.style.background;
+                    copyButton.style.background = '#166534'; // 深绿色瞬间反馈
+                    setTimeout(() => {
+                        copyButton.style.background = originalBg || '';
+                    }, 400);
+                    
+                } catch (err) {
+                    console.error('复制失败:', err);
+                    
+                    // 尝试降级方案：使用传统的 execCommand (针对旧浏览器或非https环境)
+                    try {
+                        // 创建临时文本区域
+                        const textArea = document.createElement('textarea');
+                        textArea.value = fullText;
+                        textArea.style.position = 'fixed';
+                        textArea.style.left = '-9999px';
+                        textArea.style.top = '-9999px';
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        
+                        const successful = document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        if (successful) {
+                            showFeedback('✔ 已复制 (传统方式)', 2000);
+                        } else {
+                            throw new Error('execCommand 返回 false');
+                        }
+                    } catch (fallbackError) {
+                        // 彻底失败
+                        showFeedback('❌ 复制失败，请手动选择复制', 2500);
+                        console.error('降级复制也失败:', fallbackError);
+                    }
+                }
+            }
+
+            /**
+             * 绑定事件监听器
+             */
+            function bindEvents() {
+                // 复制按钮点击事件
+                copyButton.addEventListener('click', copyTextToClipboard);
+
+                // 可选：允许键盘快捷键 Ctrl+C 或 Cmd+C 当焦点在按钮上时，
+                // 但通常用户会直接点击。我们保持简单。
+                
+                // 为了更好的无障碍，如果文本容器获得焦点，但不需要额外操作。
+            }
+
+            /**
+             * 初始化页面：加载文件并设置事件
+             */
+            function init() {
+                bindEvents();
+                // 开始加载 vv.txt
+                loadTextFile();
+            }
+
+            // 在 DOM 内容加载完成后启动
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                // DOM 已经就绪
+                init();
+            }
+        })();
+    </script>
+</body>
+</html>
