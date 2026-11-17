@@ -1,0 +1,256 @@
+mixed-port: 7890
+allow-lan: false
+mode: rule
+log-level: info
+ipv6: false
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+proxies:
+  - name: "CF-vpn2固定域名"
+    type: vless
+    server: vpn2.66zhang.cn
+    port: 443
+    uuid: 2adf5581-43f0-428f-827b-59c4caebd9de
+    network: ws
+    tls: true
+    servername: vpn2.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: /clashws
+      headers:
+        Host: vpn2.66zhang.cn
+  - name: "🇺🇸_圣何塞-443-WS-TLS-01"
+    type: vless
+    server: 190.93.245.246
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇺🇸_圣何塞-443-WS-TLS-02"
+    type: vless
+    server: 103.21.244.107
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇩🇪_法兰克福-443-WS-TLS-01"
+    type: vless
+    server: 104.27.112.195
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇺🇸_圣何塞-443-WS-TLS-03"
+    type: vless
+    server: 103.21.244.213
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇩🇪_法兰克福-443-WS-TLS-02"
+    type: vless
+    server: 172.64.186.41
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇺🇸_圣何塞-443-WS-TLS-04"
+    type: vless
+    server: 198.41.204.175
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇺🇸_圣何塞-443-WS-TLS-05"
+    type: vless
+    server: 141.101.114.187
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇺🇸_洛杉矶-443-WS-TLS-01"
+    type: vless
+    server: 104.18.123.2
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇩🇪_法兰克福-443-WS-TLS-03"
+    type: vless
+    server: 104.20.23.36
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇺🇸_圣何塞-443-WS-TLS-06"
+    type: vless
+    server: 104.17.45.244
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇺🇸_圣何塞-443-WS-TLS-07"
+    type: vless
+    server: 104.16.41.218
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇩🇪_法兰克福-443-WS-TLS-04"
+    type: vless
+    server: 104.25.77.199
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇺🇸_圣何塞-443-WS-TLS-08"
+    type: vless
+    server: 190.93.247.178
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "🇩🇪_法兰克福-443-WS-TLS-05"
+    type: vless
+    server: 104.24.232.247
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    udp: true
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - AUTO
+      - "CF-vpn2固定域名"
+      - "🇺🇸_圣何塞-443-WS-TLS-01"
+      - "🇺🇸_圣何塞-443-WS-TLS-02"
+      - DIRECT
+  - name: AUTO
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - "CF-vpn2固定域名"
+      - "🇺🇸_圣何塞-443-WS-TLS-01"
+      - "🇺🇸_圣何塞-443-WS-TLS-02"
+      - "🇩🇪_法兰克福-443-WS-TLS-01"
+      - "🇺🇸_圣何塞-443-WS-TLS-03"
+      - "🇩🇪_法兰克福-443-WS-TLS-02"
+      - "🇺🇸_圣何塞-443-WS-TLS-04"
+      - "🇺🇸_圣何塞-443-WS-TLS-05"
+      - "🇺🇸_洛杉矶-443-WS-TLS-01"
+      - "🇩🇪_法兰克福-443-WS-TLS-03"
+      - "🇺🇸_圣何塞-443-WS-TLS-06"
+      - "🇺🇸_圣何塞-443-WS-TLS-07"
+      - "🇩🇪_法兰克福-443-WS-TLS-04"
+      - "🇺🇸_圣何塞-443-WS-TLS-08"
+      - "🇩🇪_法兰克福-443-WS-TLS-05"
+rules:
+  - MATCH,PROXY
