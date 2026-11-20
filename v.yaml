@@ -253,4 +253,5 @@ proxy-groups:
       - "🇺🇸_圣何塞-443-WS-TLS-08"
       - "🇩🇪_法兰克福-443-WS-TLS-05"
 rules:
+  - GEOIP,CN,DIRECT
   - MATCH,PROXY
