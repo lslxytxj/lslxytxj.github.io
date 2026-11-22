@@ -1,0 +1,278 @@
+mixed-port: 7890
+allow-lan: false
+mode: rule
+log-level: info
+ipv6: false
+unified-delay: true
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+proxies:
+  - name: "US-443-REALITY"
+    type: vless
+    server: 179.255.125.129
+    port: 443
+    uuid: 2adf5581-43f0-428f-827b-59c4caebd9de
+    network: tcp
+    udp: true
+    tls: true
+    flow: xtls-rprx-vision
+    servername: www.npr.org
+    client-fingerprint: chrome
+    encryption: "mlkem768x25519plus.native.0rtt.BrytODJZGvFrnpIVNsxMwDdbTEgt7eRYyKEqXhcndLhcwLo4OFnLN8sLncm2fRknBMc-QdpzZ8nB5dUfMjEB_nQrFZCCRrWrDgCxHFV2reU1AKmZ4TyrNGAtFSAXs1W-mYuYIJg6uIxywqawKuxmYeVHjbeRy7HBqTMm5oIp1_ML59g1UJaTfSAbRJQXXzUXxsOWqurDjngmi0bGJNrHdByqDhcotGDNUTkPnFudrGEqt_Jw6pWTaIx7G1xrklIHIxK3A1gPG7JTd8E0rzOGb_gT9kw500VfyDWblLAHviBVG7hpCkMDgllvR0ueXClRAViYiwi1gLB-RuScNFY9KDeYAGei6MZf4TspXlROoFk70oMiE8OYD6U-9wxJ6kRm0SRtvPzAzTmJwIM0JxfAxNaYbje0yZm1wCSySMFpfVeQ20N0oIoj0OAMT2G1_JOJ35vHooW2O0m5-Di7XsUTC4l8qqzA0WAWTsGqfHg-58qS4WCJ0jnLv9EfK7QYxfHKWSLGUHEx--SIfzmlLDya-QSOeXgeJKwVoEW9BQlJiaaWNDdFxOpgB7NBQqbO-vEPmcEVK_u65OKwHoAnIbClFrJHqGpaUBOW0nYJOTgoe2I92QcqTqh7gQqk65GmXSonVEWizWkFNpHMEUoLP1gllgHEmAmkMUKxjRp7Y6YIJXzPWQhzAlOntYSipOK18KVmPTC-cBtcchIW__euXNBZ5imoV6MhCzc5I2oRdtVsE4CcfgrDpfk7GDlbQjK5QhutepIPVZAnmdXFcpzEDUV1NOx2IkIytje-lYkhjABpGLkEe0tEFkN2T8vNlNc-IstJ4nkVUQrQ8JBY-McavwMuVrSzq4S5veCBfamk__eoxVaI2kpc7_NgEsIcAcNaahsFdruJqLY_rKAhuWQ_V4VEwVrPAHQSGWSt4ADF5qGjX8SsRWSeIxCX4jIkF0tvenmP0WJtp_wfEeE36fOid6mYICOb6jbH0FhtKIQKMoVrUjyT8Ks0lupv5opRcwk0M6UIn8tb7_ZTLiROwIEk4wFboytJ14IDcLUYmIyFMBua_9ledIl5q4YfW3uwPEymVQdcHucEEZlKRFI6D-W6wQx9LQWFumeCDxwTNSWgGSCoMZq_jXUXa2ROrzhumejGVLhBM8wgSWtMQixFfCot1-NrfiYohKWl87ceUPtvgIxh_ON_kCJMtSvHV5Z0CGVtspcCPKNcrZZfxtsQgQIydWN4gTt3a2SR9DeLkjx_i6ML3piXB4Qo2YyWvPRuNFCjy7m2FDSUPSyhXWk_CQUSnJuxLfNfJ6yxY3AVNktEoUxq5oJbl-ln_yhA97GdL8mmWVpiCzIlGUBEXNjIVzRvz3VaOGRBtDG0McsMefeak6xIPTjOlIICThCo5yA-t4ctTztkWZRRmDxDxOVtI6ey9woeXmsZvpukkunCM7tLX2icYOA_kBV20YZqKbpm8TsX6mQ0KPE-CqOTHbK7G8cTMUFpNjyjk5FehrQF-0AQfrBoPqyDyGR76_vKb_IttiwaspYUysTQHyK_8LvHJMrWIDbtcgEwi3vDwrtx6yV0a0gzEbA"
+    reality-opts:
+      public-key: 9V1G7I_wRTBF-vuJ_UccJwepLBu3YIZhkodt7f5QYFo
+      short-id: 0d9399190de4ddbd
+      support-x25519mlkem768: true
+  - name: "US-8443-REALITY"
+    type: vless
+    server: 179.255.125.129
+    port: 8443
+    uuid: 5fa6464b-e8f6-44eb-90e7-218b80b40263
+    network: tcp
+    udp: true
+    tls: true
+    flow: xtls-rprx-vision
+    servername: www.espn.com
+    client-fingerprint: chrome
+    encryption: "mlkem768x25519plus.native.0rtt.08GtNeVML6uqAwYwYtczEjW77lRXrWa-E0SSmusea8C8iKFRgMadY-RJ7HwnxBVH6nB1WCSNtDeISmxwM_M_Ryeoy-x7KpM1bFA0JCotnSdTPwR6EZmE1GES8OQodwrA4ViltQuPKdhnzkWyBDYpNlm62OZ8w1gOXterjEmWK0IYdFxnJeInx6JqHgBHmzSnrxSsYcTMoeuu25xeHQHQBJXNPPVMMumRoCex1YYaYDoelUoomsJlfOcKZfrGU9d_hXKFHHiaarwdX1wBTLTG6qANa-PPmQHPaJQgmHSS_NRf9DsVKoJKCwYdYzFxJ9wcFSRzCyBz0CSufjRwVewAfCW4ERynzxhYbXedivzLHmMVBOtvO-wFROsFDQBzp6M0-4g8T2KFXeBgykVgmrBUY5hlpOaLGrcCTrKUTgKqEbQZAEhEHLeOyORJrxsrX8eQsklNUKAKAnd4GgEbyDKzvovCCgAeSJukeyfCcos4CQG4KjsCHdk70cVglfgnZJbOFxSIwgKiD_FZskqFIsILF_TK0mpFuVADHBWVwvduTOAKnvFyRUst8zwY6Rsm1bayowpZoudfl6SK1pcvTpSSz-gmowKkOLTK2fXD1OY7CsSs3EeykxZJHUo8HuFVEmR1GEVNoMYmbpKrDGJBOkea6HevvDNGGphuw-edadsdVqOhWAE69qxUFMV3dplAVZkkhhqKykVzmBQellqs5_NnDAtC3VWasOZuboYw12ZX9IIiS_lJOXSlJ6hhzDuZRsCbOzJyV9FWGlEoHAMV57iDqky4qmZ6wSwN0KFQ3nQjhYUw3XlB-fAOSnx5EBcNnVmxycW--KNnsbVmPOufoZssnGqy6CWH6WchJ3Jhwuhy2fKz9JoQwsd8aiCkIJAU0-VbAzs_dYSbqWO4HxJ0u1aMxjpFEQGhnZlpliwW4hOOwEVpGYteCdOh2TNR3usCoFkjSZUMiNkndvM32cgLnpWQzap_s2M8trDPdRqaRdNiUFtuOIMoMWaB0EBUsxTAwyRmVbY8VjJ0FuIAh7Y5gCWSpGJX0wQDDolFX_VEnMWqGYOVSNvLRTMXUoZuRhp3YlyQURsngOOEF8sZEamjwzGxWdyLVLVJZGsKt_x7BaCSaEdQ7LpFNQM17zwWAzap2XhNPhx4ZEKuQqynYbqqMoxCB-QA5VXL_jDKurIOtlOYYTECB4o9Ios4C2BI-kvHkqcSz_Re1UVecst8n4Wuyjmv9kwFrux0QXrJ8JwCPCYo1-m7h4VZiHiMN2jNxxnMWzA8Qbwmlemk2uyk8rNq46gWeYLCGORdQnuQ5jw96gwBKaiZiDMDU3hnPGkdB5SZJTWv_ZcXCDGESLU865OS3ztQ0ig5I7x80-PCvlOOUpFKd5S3DznHOWs17oRvpbtqSqNQoZVyuldXt7uqFvIkPYMO3NsKR3m1L4V0nfhWPUZzCIme77s49BAkejkWN6AXlIIrrCYhgzWP1Tmj-osS4sI-TTfKcVxpHKFZ7ZfKcdtZaHacb5B3CgQV_WW5FUSo4ug6bfzu0KCtM9rnkPjR0GyuLoW86lHhvt7e_EzImy9HvcQ"
+    reality-opts:
+      public-key: Ik1OIEd7xAWLPHO7IYyp2P2aJ8tt5r0lwf86_6OuqQk
+      short-id: 5bd45cf0293229d4
+      support-x25519mlkem768: false
+  - name: "CF-WS-固定域名"
+    type: vless
+    server: vpn2.66zhang.cn
+    port: 443
+    uuid: 2adf5581-43f0-428f-827b-59c4caebd9de
+    network: ws
+    udp: true
+    tls: true
+    servername: vpn2.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: /clashws
+      headers:
+        Host: vpn2.66zhang.cn
+  - name: "V-🇺🇸_圣何塞-443-WS-TLS-01"
+    type: vless
+    server: 190.93.245.246
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇺🇸_圣何塞-443-WS-TLS-02"
+    type: vless
+    server: 103.21.244.107
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇩🇪_法兰克福-443-WS-TLS-01"
+    type: vless
+    server: 104.27.112.195
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇺🇸_圣何塞-443-WS-TLS-03"
+    type: vless
+    server: 103.21.244.213
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇩🇪_法兰克福-443-WS-TLS-02"
+    type: vless
+    server: 172.64.186.41
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇺🇸_圣何塞-443-WS-TLS-04"
+    type: vless
+    server: 198.41.204.175
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇺🇸_圣何塞-443-WS-TLS-05"
+    type: vless
+    server: 141.101.114.187
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇺🇸_洛杉矶-443-WS-TLS-01"
+    type: vless
+    server: 104.18.123.2
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇩🇪_法兰克福-443-WS-TLS-03"
+    type: vless
+    server: 104.20.23.36
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇺🇸_圣何塞-443-WS-TLS-06"
+    type: vless
+    server: 104.17.45.244
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇺🇸_圣何塞-443-WS-TLS-07"
+    type: vless
+    server: 104.16.41.218
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇩🇪_法兰克福-443-WS-TLS-04"
+    type: vless
+    server: 104.25.77.199
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇺🇸_圣何塞-443-WS-TLS-08"
+    type: vless
+    server: 190.93.247.178
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+  - name: "V-🇩🇪_法兰克福-443-WS-TLS-05"
+    type: vless
+    server: 104.24.232.247
+    port: 443
+    uuid: 45a1dc79-eb1e-4771-bb99-d36ee807965e
+    network: ws
+    udp: true
+    tls: true
+    servername: vpnx917813.66zhang.cn
+    client-fingerprint: chrome
+    ws-opts:
+      path: "/?ed=2048"
+      headers:
+        Host: vpnx917813.66zhang.cn
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - AUTO
+      - "US-443-REALITY"
+      - "US-8443-REALITY"
+      - "CF-WS-固定域名"
+      - DIRECT
+  - name: AUTO
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - "US-443-REALITY"
+      - "US-8443-REALITY"
+      - "CF-WS-固定域名"
+rules:
+  - GEOIP,CN,DIRECT
+  - MATCH,PROXY
